@@ -1,0 +1,54 @@
+<odoo>
+    <data noupdate="0">
+        <record id="object1" model="weakest.link.values">
+            <field name="sequence">1</field>
+            <field name="value">0.25</field>
+        </record>
+
+        <record id="object2" model="weakest.link.values">
+            <field name="sequence">2</field>
+            <field name="value">0.50</field>
+        </record>
+
+        <record id="object3" model="weakest.link.values">
+            <field name="sequence">3</field>
+            <field name="value">1</field>
+        </record>
+
+        <record id="object4" model="weakest.link.values">
+            <field name="sequence">4</field>
+            <field name="value">2</field>
+        </record>
+
+        <record id="object5" model="weakest.link.values">
+            <field name="sequence">5</field>
+            <field name="value">5</field>
+        </record>
+
+        <record id="object6" model="weakest.link.values">
+            <field name="sequence">6</field>
+            <field name="value">10</field>
+        </record>
+
+        <record id="object7" model="weakest.link.values">
+            <field name="sequence">7</field>
+            <field name="value">20</field>
+        </record>
+
+        <record id="object8" model="weakest.link.values">
+            <field name="sequence">8</field>
+            <field name="value">30</field>
+        </record>
+
+        <record id="object9" model="weakest.link.values">
+            <field name="sequence">9</field>
+            <field name="value">40</field>
+        </record>
+
+        <record id="object10" model="weakest.link.values">
+            <field name="sequence">10</field>
+            <field name="value">50</field>
+        </record>
+
+    </data>
+</odoo>
