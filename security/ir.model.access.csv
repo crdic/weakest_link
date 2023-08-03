@@ -1,7 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_weakest_link,weakest_link,model_weakest_link,base.group_user,1,1,1,1
 access_weakest_link_line,weakest_link_line,model_weakest_link_line,base.group_user,1,1,1,1
 access_weakest_link_values,weakest_link_values,model_weakest_link_values,base.group_user,1,1,1,1
 access_weakest_link_session,weakest_link_session,model_weakest_link_session,base.group_user,1,1,1,1
-access_weakest_link_question,weakest_link_question,model_weakest_link_question,base.group_user,1,1,1,1
 access_weakest_link_topic,weakest_link_topic,model_weakest_link_topic,base.group_user,1,1,1,1

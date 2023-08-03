@@ -5,20 +5,22 @@ from odoo import models, fields, api
 
 class WeakestSession(models.Model):
     _name = 'weakest.link.session'
-    _description = 'Weakest link round'
+    _description = 'Weakest link game'
     _rec_name = 'name'
 
     name = fields.Char(string="Value")
     players = fields.Integer(string="Players", required=True, default=8)
+    players_ids = fields.Many2many('res.users', string="Users", required=True)
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
     global_value = fields.Monetary(currency_field="currency_id", string="Total", compute="get_total_value")
-    round_ids = fields.One2many('weakest.link', 'session_id', string="Sessions")
+    round_ids = fields.One2many('survey.survey', 'session_id', string="Sessions")
 
     @api.model
     def create(self, vals):
         res = super(WeakestSession, self).create(vals)
         for line in list(range(res.players)):
-            self.env['weakest.link'].create({'name': res.name + ' Round ' + str(line+1), 'session_id': res.id})
+            self.env['weakest.link'].create({'name': res.name + ' Round ' + str(line + 1), 'session_id': res.id,
+                                             'players_ids': res.players_ids.ids, 'objective': False})
         return res
 
     def get_total_value(self):
@@ -27,18 +29,17 @@ class WeakestSession(models.Model):
 
 
 class Weakestlink(models.Model):
-    _name = 'weakest.link'
-    _description = 'Weakest link round'
-    _rec_name = 'name'
+    _inherit = 'survey.survey'
+    _description = 'Weakest link session'
 
-    name = fields.Char(string="Value")
     session_id = fields.Many2one('weakest.link.session', string="Session")
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
     global_value = fields.Monetary(currency_field="currency_id", string="Total")
     line_ids = fields.One2many('weakest.link.line', 'link_id', string="Lines")
     current_line_id = fields.Many2one('weakest.link.line', string="Current line")
     objective = fields.Boolean(string="Objective")
-    question_ids = fields.One2many('weakest.link.question','link_id')
+    players_ids = fields.Many2many('res.users', string="Users")
+    deleted_player_id = fields.Many2one('res.users', string="Deleted user")
 
     @api.model
     def create(self, vals):
@@ -70,7 +71,7 @@ class Weakestlink(models.Model):
                 record.line_ids.write({'sums': False})
 
 
-class weakestline(models.Model):
+class Weakestline(models.Model):
     _name = 'weakest.link.line'
     _description = 'Weakest link line'
     _rec_name = 'value'
@@ -79,7 +80,7 @@ class weakestline(models.Model):
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
     value = fields.Monetary(currency_field="currency_id")
     sums = fields.Boolean(string="Sum")
-    link_id = fields.Many2one('weakest.link', string="Line")
+    link_id = fields.Many2one('survey.survey', string="Line")
 
 
 class Weakest_values(models.Model):
@@ -91,19 +92,16 @@ class Weakest_values(models.Model):
     currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id.id)
     value = fields.Monetary(currency_field="currency_id")
     sums = fields.Boolean(string="Sum")
-    link_id = fields.Many2one('weakest.link', string="Line")
+    link_id = fields.Many2one('survey.survey', string="Line")
 
 
 class Weakest_question(models.Model):
-    _name = 'weakest.link.question'
+    _inherit = 'survey.question'
     _description = 'Weakest link questions'
 
-    link_id = fields.Many2one('weakest.link', string="Line")
-    topic_id = fields.Many2one('weakest.link.topic',string="Topic")
+    topic_id = fields.Many2one('weakest.link.topic', string="Topic")
     question = fields.Text()
-    answer = fields.Char()
-    is_right = fields.Boolean()
-    active = fields.Boolean(string="Active",default=True)
+    player_id = fields.Many2one('res.users')
 
 
 class Weakest_topic(models.Model):
@@ -111,5 +109,4 @@ class Weakest_topic(models.Model):
     _description = 'Weakest link topic'
 
     name = fields.Char(required=True)
-    question_ids = fields.One2many('weakest.link.question','topic_id')
-
+    question_ids = fields.One2many('survey.question', 'topic_id')
